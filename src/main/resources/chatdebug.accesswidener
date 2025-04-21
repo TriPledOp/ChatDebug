@@ -1,0 +1,27 @@
+accessWidener v2 named
+
+#accessible method net/minecraft/text/ClickEvent$Action <init> (Ljava/lang/String;ZLcom/mojang/serialization/MapCodec;)V
+accessible class net/minecraft/client/font/TextRenderer$Drawer
+
+accessible field net/minecraft/client/font/BakedGlyph minU F
+accessible field net/minecraft/client/font/BakedGlyph maxU F
+accessible field net/minecraft/client/font/BakedGlyph minV F
+accessible field net/minecraft/client/font/BakedGlyph maxV F
+accessible field net/minecraft/client/font/BakedGlyph minX F
+accessible field net/minecraft/client/font/BakedGlyph maxX F
+accessible field net/minecraft/client/font/BakedGlyph minY F
+accessible field net/minecraft/client/font/BakedGlyph maxY F
+
+mutable field net/minecraft/client/font/BakedGlyph minU F
+mutable field net/minecraft/client/font/BakedGlyph maxU F
+mutable field net/minecraft/client/font/BakedGlyph minV F
+mutable field net/minecraft/client/font/BakedGlyph maxV F
+mutable field net/minecraft/client/font/BakedGlyph minX F
+mutable field net/minecraft/client/font/BakedGlyph maxX F
+mutable field net/minecraft/client/font/BakedGlyph minY F
+mutable field net/minecraft/client/font/BakedGlyph maxY F
+
+# for testing context.drawGuiTexture
+accessible field net/minecraft/client/texture/SpriteAtlasHolder atlas Lnet/minecraft/client/texture/SpriteAtlasTexture;
+accessible field net/minecraft/client/texture/SpriteAtlasTexture spritesToLoad Ljava/util/List;
+accessible field net/minecraft/client/texture/SpriteAtlasTexture sprites Ljava/util/Map;
