@@ -23,7 +23,26 @@ class ChatMessageDetailScreen(val message: Text) : Screen(Text.literal("Chat Mes
     val previousScreen = MinecraftClient.getInstance().currentScreen
 
     override fun init() {
-        addDrawableChild(ScrollableTextWidget(20, 50, width - 50, height - 20 - 10 - ButtonWidget.DEFAULT_HEIGHT - 10 - 35, Text.literal(serialized), textRenderer))
+        addDrawableChild(
+            ScrollableTextWidget(
+                20,
+                20,
+                width - 50,
+                25,
+                message,
+                textRenderer
+            )
+        )
+        addDrawableChild(
+            ScrollableTextWidget(
+                20,
+                50,
+                width - 50,
+                height - 20 - 10 - ButtonWidget.DEFAULT_HEIGHT - 10 - 35,
+                Text.literal(serialized.replace("§", "&")),
+                textRenderer
+            )
+        )
         addDrawableChild(
             ButtonWidget.builder(Text.literal("Copy to clipboard")) {
                 MinecraftClient.getInstance().keyboard.clipboard = serialized
@@ -36,11 +55,11 @@ class ChatMessageDetailScreen(val message: Text) : Screen(Text.literal("Chat Mes
         )
     }
 
-    override fun render(context: DrawContext, mouseX: Int, mouseY: Int, deltaTicks: Float) {
-        super.render(context, mouseX, mouseY, deltaTicks)
-
-        MultilineText.create(textRenderer, message, width - 40).drawCenterWithShadow(context, width / 2, 25)
-    }
+//    override fun render(context: DrawContext, mouseX: Int, mouseY: Int, deltaTicks: Float) {
+//        super.render(context, mouseX, mouseY, deltaTicks)
+//
+//        MultilineText.create(textRenderer, message, width - 40).drawCenterWithShadow(context, width / 2, 25)
+//    }
 
     override fun renderBackground(context: DrawContext, mouseX: Int, mouseY: Int, deltaTicks: Float) {
         super.renderBackground(context, mouseX, mouseY, deltaTicks)
