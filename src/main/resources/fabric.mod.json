@@ -10,14 +10,14 @@
   "icon": "assets/chatdebug/icon.png",
   "environment": "client",
   "entrypoints": {
-    "fabric-datagen": [
-      "dev.tripledop.chatdebug.client.ChatDebugModDataGenerator"
-    ],
     "client": [
       "dev.tripledop.chatdebug.client.ChatDebugModClient"
     ],
     "main": [
       "dev.tripledop.chatdebug.ChatDebugMod"
+    ],
+    "modmenu": [
+      "dev.tripledop.chatdebug.client.ModMenuIntegration"
     ]
   },
   "mixins": [
@@ -27,6 +27,7 @@
     "fabricloader": ">=${loader_version}",
     "fabric-language-kotlin": ">=${kotlin_loader_version}",
     "fabric": "*",
-    "minecraft": "${minecraft_version}"
+    "minecraft": "${minecraft_version}",
+    "cloth-config": ">=18.0.145"
   }
 }

@@ -19,7 +19,7 @@ import java.net.URI;
 public class ChatScreenMixin {
     @Inject(method = "handleTextClick(Lnet/minecraft/text/Style;)Z", at = @At("HEAD"), cancellable = true)
     public void handleClick(Style style, CallbackInfoReturnable<Boolean> cir) {
-        if (style == null) return;
+        if (style == null || !ChatDebugModClient.isEnabled()) return;
         if (Screen.hasShiftDown()) return;
         final var evt = style.getClickEvent();
         if (evt == null) return;

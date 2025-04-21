@@ -1,11 +1,12 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.utils.extendsFrom
 
 plugins {
     kotlin("jvm") version "2.1.20"
     id("fabric-loom") version "1.10-SNAPSHOT"
     id("maven-publish")
-    id("com.gradleup.shadow") version "8.3.6"
+    id("com.gradleup.shadow") version "9.0.0-beta12"
 }
 
 version = project.property("mod_version") as String
@@ -28,19 +29,20 @@ loom {
     accessWidenerPath = file("src/main/resources/chatdebug.accesswidener")
 }
 
-fabricApi {
-    configureDataGeneration {
-        client = true
-    }
-}
-
 repositories {
     // Add repositories to retrieve artifacts from in here.
     // You should only use this when depending on other mods because
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
+
+    maven { url = uri("https://maven.shedaniel.me/") }
+    maven { url = uri("https://maven.terraformersmc.com/releases/") }
 }
+
+val library: Configuration by configurations.creating
+configurations.implementation.configure { extendsFrom(library) }
+configurations.shadow.configure { extendsFrom(library) }
 
 dependencies {
     // To change the versions see the gradle.properties file
@@ -52,7 +54,12 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
 
     // https://mvnrepository.com/artifact/org.entur.jackson/jackson-syntax-highlight
-    implementation("org.entur.jackson:jackson-syntax-highlight:1.1.0")
+    library("org.entur.jackson:jackson-syntax-highlight:1.1.0") {
+        exclude("com.fasterxml.jackson.core")
+    }
+
+    modApi("com.terraformersmc:modmenu:14.0.0-rc.2")
+    modApi("me.shedaniel.cloth:cloth-config-fabric:18.0.145")
 }
 
 tasks.processResources {
@@ -90,22 +97,15 @@ tasks.jar {
     }
 }
 
-tasks {
-    shadowJar {
-        configurations = listOf(project.configurations.shadow.get())
-        relocate("org.entur.jackson", "${project.group}.relocated.org.entur.jackson")
+tasks.shadowJar {
+    configurations = listOf(project.configurations.shadow.get())
 
-        dependencies {
-            include {
-                it.moduleGroup == "org.entur.jackson"
-            }
-        }
-    }
+    relocate("org.entur.jackson", "${project.group}.relocated.org.entur.jackson")
+}
 
-    remapJar {
-        dependsOn(shadowJar)
-        inputFile.set(shadowJar.get().archiveFile)
-    }
+tasks.remapJar {
+    dependsOn(tasks.shadowJar)
+    inputFile.set(tasks.shadowJar.get().archiveFile)
 }
 
 // configure the maven publication

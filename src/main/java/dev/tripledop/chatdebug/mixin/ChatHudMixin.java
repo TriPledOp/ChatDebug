@@ -2,6 +2,7 @@ package dev.tripledop.chatdebug.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.tripledop.chatdebug.ChatDebugMod;
+import dev.tripledop.chatdebug.client.ChatDebugModClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextHandler;
 import net.minecraft.client.font.TextRenderer;
@@ -25,6 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.net.URI;
 import java.util.List;
 
+@SuppressWarnings("SpellCheckingInspection")
 @Mixin(ChatHud.class)
 public class ChatHudMixin {
     @Shadow @Final private MinecraftClient client;
@@ -33,7 +35,7 @@ public class ChatHudMixin {
     private void renderChat(DrawContext context, int currentTick, int mouseX, int mouseY, boolean focused, CallbackInfo ci, @Local(ordinal = 19) int y, @Local ChatHudLine.Visible visible, @Local(ordinal = 15) int u) {
         int dx = context.drawTextWithShadow(client.textRenderer, visible.content(), 0, y, ColorHelper.withAlpha(u, Colors.WHITE));
 
-        if (focused && ChatDebugMod.getTexts().containsKey(visible.content().hashCode())) context.drawTexture(
+        if (focused && ChatDebugModClient.isEnabled() && ChatDebugMod.getTexts().containsKey(visible.content().hashCode())) context.drawTexture(
             RenderLayer::getGuiTextured,
             Identifier.of("chatdebug", "textures/gui/json_btn.png"),
             dx + 4, y - 1, 0f, 0f, 21, 9, 21, 9
@@ -50,22 +52,10 @@ public class ChatHudMixin {
         Style s = instance.getStyleAt(text, x);
         float len = instance.getWidth(text);
         float lenp = x - len;
-        if (s == null && (lenp > 4) && (lenp <= 21 + 4) && ChatDebugMod.getTexts().containsKey(visible.content().hashCode()))
-            return Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(Text.literal("View message JSON"))).withClickEvent(new ClickEvent.OpenUrl(URI.create("view-msg-details:" + visible.content().hashCode())));
+        if (s == null && (lenp > 4) && (lenp <= 21 + 4) && ChatDebugModClient.isEnabled() && ChatDebugMod.getTexts().containsKey(visible.content().hashCode()))
+            return Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(Text.translatable("text.chatdebug.json_icon.hover"))).withClickEvent(new ClickEvent.OpenUrl(URI.create("view-msg-details:" + visible.content().hashCode())));
         return s;
     }
-
-//    @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At("HEAD"), argsOnly = true)
-//    private Text injectedMessage(Text msg) {
-//        final var jsonStr = Text.Serialization.toJsonString(msg, MinecraftClient.getInstance().player.getRegistryManager());
-//        final var jsonText = Text.literal("[json]");
-//        jsonText.setStyle(
-//            Style.EMPTY.withItalic(true)
-//                .withHoverEvent(new HoverEvent.ShowText(Text.of(jsonStr)))
-//                .withClickEvent(new ClickEvent.OpenUrl(URI.create("view-msg-details:msg")))
-//        );
-//        return msg.copy().append(Text.of(" ")).append(jsonText);
-//    }
 
     @Inject(method = "addVisibleMessage(Lnet/minecraft/client/gui/hud/ChatHudLine;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/ChatHud;isChatFocused()Z", shift = At.Shift.AFTER))
     private void addVisibleChatLine(ChatHudLine message, CallbackInfo ci, @Local List<OrderedText> list) {
@@ -76,6 +66,6 @@ public class ChatHudMixin {
 
     @Redirect(method = "addVisibleMessage(Lnet/minecraft/client/gui/hud/ChatHudLine;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/ChatMessages;breakRenderedChatMessageLines(Lnet/minecraft/text/StringVisitable;ILnet/minecraft/client/font/TextRenderer;)Ljava/util/List;"))
     private List<OrderedText> redirectChatMsgSplit(StringVisitable message, int width, TextRenderer textRenderer) {
-        return ChatMessages.breakRenderedChatMessageLines(message, width - (4 + 21), textRenderer);
+        return ChatMessages.breakRenderedChatMessageLines(message, width - (ChatDebugModClient.isEnabled() ? (4 + 21) : 0), textRenderer);
     }
 }

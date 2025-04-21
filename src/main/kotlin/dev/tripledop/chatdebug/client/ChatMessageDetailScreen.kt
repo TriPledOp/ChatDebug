@@ -43,22 +43,22 @@ class ChatMessageDetailScreen(val message: Text, val previousScreen: Screen?) : 
             )
         )
         addDrawableChild(
-            ButtonWidget.builder(Text.literal("Copy to clipboard")) {
+            ButtonWidget.builder(Text.translatable("chat.copy")) {
                 MinecraftClient.getInstance().keyboard.clipboard = serialized
-            }.position(20, height - 20 - 10 - ButtonWidget.DEFAULT_HEIGHT / 2).build()
+            }
+                .position(20, height - 20 - 10 - ButtonWidget.DEFAULT_HEIGHT / 2)
+                .width((width - 40) / 2 - 4)
+                .build()
         )
         addDrawableChild(
-            ButtonWidget.builder(Text.literal("Close")) {
+            ButtonWidget.builder(Text.translatable("mco.selectServer.close")) {
                 close()
-            }.position(20 + ButtonWidget.DEFAULT_WIDTH + 10, height - 20 - 10 - ButtonWidget.DEFAULT_HEIGHT / 2).build()
+            }
+                .position(20 + (width - 40) / 2 + 2, height - 20 - 10 - ButtonWidget.DEFAULT_HEIGHT / 2)
+                .width((width - 40) / 2 - 4)
+                .build()
         )
     }
-
-//    override fun render(context: DrawContext, mouseX: Int, mouseY: Int, deltaTicks: Float) {
-//        super.render(context, mouseX, mouseY, deltaTicks)
-//
-//        MultilineText.create(textRenderer, message, width - 40).drawCenterWithShadow(context, width / 2, 25)
-//    }
 
     override fun renderBackground(context: DrawContext, mouseX: Int, mouseY: Int, deltaTicks: Float) {
         super.renderBackground(context, mouseX, mouseY, deltaTicks)
