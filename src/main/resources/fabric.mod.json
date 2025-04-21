@@ -5,7 +5,10 @@
   "name": "ChatDebug",
   "description": "lets you view the chat messages as JSON / raw ChatComponent code",
   "authors": ["TriPledOp"],
-  "contact": {},
+  "contact": {
+    "sources": "https://github.com/TriPledOp/ChatDebug",
+    "issues": "https://github.com/TriPledOp/ChatDebug/issues"
+  },
   "license": "MIT",
   "icon": "assets/chatdebug/icon.png",
   "environment": "client",

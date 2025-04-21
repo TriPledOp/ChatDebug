@@ -1,6 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.gradle.utils.extendsFrom
 
 plugins {
     kotlin("jvm") version "2.1.20"
@@ -101,6 +100,8 @@ tasks.shadowJar {
     configurations = listOf(project.configurations.shadow.get())
 
     relocate("org.entur.jackson", "${project.group}.relocated.org.entur.jackson")
+
+    archiveFileName = "${project.base.archivesName.get()}-${project.version}_shadowed_no-remap.jar"
 }
 
 tasks.remapJar {
