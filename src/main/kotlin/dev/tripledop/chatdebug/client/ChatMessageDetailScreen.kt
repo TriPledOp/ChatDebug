@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier
 import org.entur.jackson.jsh.SyntaxHighlightingJsonGenerator
 import java.io.StringWriter
 
-class ChatMessageDetailScreen(val message: Text, val previousScreen: Screen?) : Screen(Text.literal("Chat Message Detail")) {
+class ChatMessageDetailScreen(val message: Text, val previousScreen: Screen?) : Screen(Text.translatable("text.chatdebug.dialog.viewjson.title")) {
     val serialized: String = Text.Serialization.toJsonString(message, MinecraftClient.getInstance().player!!.registryManager)
     val highlightedSerialized = {
         val highlJsonBuf = StringWriter()

@@ -28,9 +28,7 @@ public class ChatScreenMixin {
                 final var textHash = Integer.parseInt(uri.getRawSchemeSpecificPart());
                 final var text = ChatDebugMod.getTexts().get(textHash);
                 if (text != null) ChatDebugModClient.getInstance().showTextInfo(text);
-                else MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.literal("Error with loading JSON.").styled(s -> s.withColor(TextColor.fromRgb(0xFFFF0000))));
-//                final var serialized = Text.Serialization.toJsonString(text, client.player.getRegistryManager());
-//                MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(serialized));
+                else MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.translatable("text.chatdebug.error.notfound").styled(s -> s.withColor(TextColor.fromRgb(0xFFFF0000))));
                 cir.setReturnValue(true);
             }
         }

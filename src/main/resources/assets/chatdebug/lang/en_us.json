@@ -2,5 +2,7 @@
   "text.autoconfig.chatdebug.title": "Settings for Chat Debug",
   "text.autoconfig.chatdebug.option.isEnabled.@PrefixText": "This is the only way to access all of the functionality of this mod, so you can enable/disable it with this toggle.",
   "text.autoconfig.chatdebug.option.isEnabled": "Show JSON icon next to chat messages",
-  "text.chatdebug.json_icon.hover": "View message JSON"
+  "text.chatdebug.json_icon.hover": "View message JSON",
+  "text.chatdebug.dialog.viewjson.title": "Chat message JSON",
+  "text.chatdebug.error.notfound": "Error with loading JSON."
 }
