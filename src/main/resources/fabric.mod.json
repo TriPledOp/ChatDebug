@@ -4,7 +4,7 @@
   "version": "${version}",
   "name": "ChatDebug",
   "description": "lets you view the chat messages as JSON / raw ChatComponent code",
-  "authors": [],
+  "authors": ["TriPledOp"],
   "contact": {},
   "license": "MIT",
   "icon": "assets/chatdebug/icon.png",

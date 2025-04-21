@@ -1,26 +1,25 @@
 package dev.tripledop.chatdebug.client
 
-import com.google.gson.GsonBuilder
-import com.mojang.serialization.JsonOps
+import com.fasterxml.jackson.databind.ObjectMapper
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.font.MultilineText
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.gui.widget.ScrollableTextWidget
 import net.minecraft.client.render.RenderLayer
 import net.minecraft.text.Text
-import net.minecraft.text.TextCodecs
 import net.minecraft.util.Identifier
+import org.entur.jackson.jsh.SyntaxHighlightingJsonGenerator
+import java.io.StringWriter
 
-class ChatMessageDetailScreen(val message: Text) : Screen(Text.literal("Chat Message Detail")) {
-    val serialized: String = GsonBuilder().setPrettyPrinting().create().toJson(
-        TextCodecs.CODEC!!.encodeStart(
-            MinecraftClient.getInstance().player!!.registryManager.getOps(JsonOps.INSTANCE),
-            message
-        )!!.orThrow
-    )
-    val previousScreen = MinecraftClient.getInstance().currentScreen
+class ChatMessageDetailScreen(val message: Text, val previousScreen: Screen?) : Screen(Text.literal("Chat Message Detail")) {
+    val serialized: String = Text.Serialization.toJsonString(message, MinecraftClient.getInstance().player!!.registryManager)
+    val highlightedSerialized = {
+        val highlJsonBuf = StringWriter()
+        val syntaxHighl = SyntaxHighlightingJsonGenerator(ObjectMapper().createGenerator(highlJsonBuf), MCJsonSyntaxHighlight(), true)
+        syntaxHighl.writeTree(ObjectMapper().readTree(serialized.replace("§", "&")))
+        highlJsonBuf.toString()
+    }()
 
     override fun init() {
         addDrawableChild(
@@ -39,7 +38,7 @@ class ChatMessageDetailScreen(val message: Text) : Screen(Text.literal("Chat Mes
                 50,
                 width - 50,
                 height - 20 - 10 - ButtonWidget.DEFAULT_HEIGHT - 10 - 35,
-                Text.literal(serialized.replace("§", "&")),
+                Text.literal(highlightedSerialized),
                 textRenderer
             )
         )

@@ -5,6 +5,7 @@ plugins {
     kotlin("jvm") version "2.1.20"
     id("fabric-loom") version "1.10-SNAPSHOT"
     id("maven-publish")
+    id("com.gradleup.shadow") version "8.3.6"
 }
 
 version = project.property("mod_version") as String
@@ -49,6 +50,9 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:${project.property("kotlin_loader_version")}")
 
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
+
+    // https://mvnrepository.com/artifact/org.entur.jackson/jackson-syntax-highlight
+    implementation("org.entur.jackson:jackson-syntax-highlight:1.1.0")
 }
 
 tasks.processResources {
@@ -83,6 +87,24 @@ tasks.withType<KotlinCompile>().configureEach {
 tasks.jar {
     from("LICENSE") {
         rename { "${it}_${project.base.archivesName}" }
+    }
+}
+
+tasks {
+    shadowJar {
+        configurations = listOf(project.configurations.shadow.get())
+        relocate("org.entur.jackson", "${project.group}.relocated.org.entur.jackson")
+
+        dependencies {
+            include {
+                it.moduleGroup == "org.entur.jackson"
+            }
+        }
+    }
+
+    remapJar {
+        dependsOn(shadowJar)
+        inputFile.set(shadowJar.get().archiveFile)
     }
 }
 

@@ -1,7 +1,6 @@
 package dev.tripledop.chatdebug
 
 import net.fabricmc.api.ModInitializer
-import net.minecraft.client.MinecraftClient
 import net.minecraft.text.Text
 
 class ChatDebugMod : ModInitializer {
